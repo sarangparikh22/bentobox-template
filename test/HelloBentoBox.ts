@@ -49,8 +49,8 @@ describe("Hello BentoBox", function () {
         tokens[i].approve(bento.address, getBigNumber(1000000)).then(() => {
           bento.deposit(
             tokens[i].address,
-            accounts[0].address,
-            accounts[0].address,
+            accounts[0].getAddress(),
+            accounts[0].getAddress(),
             getBigNumber(500000),
             0
           );
@@ -60,7 +60,7 @@ describe("Hello BentoBox", function () {
 
     await Promise.all(promises);
     await bento.setMasterContractApproval(
-      accounts[0].address,
+      accounts[0].getAddress(),
       helloBentoBox.address,
       true,
       "0",
@@ -70,7 +70,7 @@ describe("Hello BentoBox", function () {
     await bento
       .connect(accounts[1])
       .setMasterContractApproval(
-        accounts[1].address,
+        accounts[1].getAddress(),
         helloBentoBox.address,
         true,
         "0",
@@ -91,7 +91,7 @@ describe("Hello BentoBox", function () {
     const amount = getBigNumber(1000);
 
     const balanceOfUserWalletBefore = await tokens[0].balanceOf(
-      accounts[0].address
+      accounts[0].getAddress()
     );
     const totalDepositsBefore = await helloBentoBox.totalDeposits();
     const shares = await toShare(bento, tokens[0], amount);
@@ -106,14 +106,14 @@ describe("Hello BentoBox", function () {
     const depositData = await helloBentoBox.deposits(totalDepositsBefore);
 
     const balanceOfUserWalletAfter = await tokens[0].balanceOf(
-      accounts[0].address
+      accounts[0].getAddress()
     );
 
     expect(totalDepositsBefore.add(1)).to.be.equal(totalDepositsAfter);
     expect(balanceOfUserWalletBefore.sub(amount)).to.be.equal(
       balanceOfUserWalletAfter
     );
-    expect(depositData.user).to.be.equal(accounts[0].address);
+    expect(depositData.user).to.be.equal(await accounts[0].getAddress());
     expect(depositData.token).to.be.equal(tokens[0].address);
     expect(depositData.depositedShares).to.be.equal(shares);
   });
@@ -124,7 +124,7 @@ describe("Hello BentoBox", function () {
     const balanceOfUserBentoBefore = await getBentoBalance(
       bento,
       tokens[0],
-      accounts[0].address
+      await accounts[0].getAddress()
     );
     const totalDepositsBefore = await helloBentoBox.totalDeposits();
     const shares = await toShare(bento, tokens[0], amount);
@@ -138,14 +138,14 @@ describe("Hello BentoBox", function () {
     const balanceOfUserBentoAfter = await getBentoBalance(
       bento,
       tokens[0],
-      accounts[0].address
+      await accounts[0].getAddress()
     );
 
     expect(totalDepositsBefore.add(1)).to.be.equal(totalDepositsAfter);
     expect(balanceOfUserBentoBefore.sub(shares)).to.be.equal(
       balanceOfUserBentoAfter
     );
-    expect(depositData.user).to.be.equal(accounts[0].address);
+    expect(depositData.user).to.be.equal(await accounts[0].getAddress());
     expect(depositData.token).to.be.equal(tokens[0].address);
     expect(depositData.depositedShares).to.be.equal(shares);
   });
@@ -161,7 +161,7 @@ describe("Hello BentoBox", function () {
     );
 
     const balanceOfUserWalletBefore = await tokens[0].balanceOf(
-      accounts[0].address
+      accounts[0].getAddress()
     );
         
     const shares = await toShare(bento, tokens[0], amount);
@@ -170,7 +170,7 @@ describe("Hello BentoBox", function () {
     const depositData = await helloBentoBox.deposits(totalDepositsBefore);
 
     const balanceOfUserWalletAfter = await tokens[0].balanceOf(
-      accounts[0].address
+      accounts[0].getAddress()
     );
     expect(depositData.depositedShares).to.be.equal(amount.sub(getBigNumber(500)));
     expect(balanceOfUserWalletBefore.add(getBigNumber(500))).to.be.equal(
@@ -191,7 +191,7 @@ describe("Hello BentoBox", function () {
     const balanceOfUserBentoBefore = await getBentoBalance(
       bento,
       tokens[0],
-      accounts[0].address
+      await accounts[0].getAddress()
     );
         
     const shares = await toShare(bento, tokens[0], amount);
@@ -202,7 +202,7 @@ describe("Hello BentoBox", function () {
     const balanceOfUserBentoAfter = await getBentoBalance(
       bento,
       tokens[0],
-      accounts[0].address
+      await accounts[0].getAddress()
     );
     expect(depositData.depositedShares).to.be.equal(amount.sub(getBigNumber(500)));
     expect(balanceOfUserBentoBefore.add(getBigNumber(500))).to.be.equal(
@@ -245,8 +245,8 @@ describe("Hello BentoBox - Batch Approval", function() {
         tokens[i].approve(bento.address, getBigNumber(1000000)).then(() => {
           bento.deposit(
             tokens[i].address,
-            accounts[0].address,
-            accounts[0].address,
+            accounts[0].getAddress(),
+            accounts[0].getAddress(),
             getBigNumber(500000),
             0
           );
@@ -267,7 +267,7 @@ describe("Hello BentoBox - Batch Approval", function() {
   
   it("should allow HelloBentoBox and deposit in one transaction", async function () {
     const amount = getBigNumber(1000);
-    const nonce = await bento.nonces(accounts[0].address);
+    const nonce = await bento.nonces(await accounts[0].getAddress());
     const { v, r, s } = getSignedMasterContractApprovalData(
       bento,
       accounts[0],
@@ -278,7 +278,7 @@ describe("Hello BentoBox - Batch Approval", function() {
     );
     let masterContractApprovalData = helloBentoBox.interface.encodeFunctionData(
       "setBentoBoxApproval",
-      [accounts[0].address, true, v, r, s]
+      [await accounts[0].getAddress(), true, v, r, s]
     );
     let depositData = helloBentoBox.interface.encodeFunctionData("depositToHelloBentoBox", [
       tokens[0].address,
