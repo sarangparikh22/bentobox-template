@@ -165,7 +165,7 @@ describe("Hello BentoBox", function () {
     const balanceOfUserWalletBefore = await tokens[0].balanceOf(
       accounts[0].getAddress()
     );
-        
+
     const shares = await toShare(bento, tokens[0], amount);
 
     await helloBentoBox.withdrawFromHelloBentoBox(totalDepositsBefore, getBigNumber(500), false)
@@ -195,7 +195,7 @@ describe("Hello BentoBox", function () {
       tokens[0],
       await accounts[0].getAddress()
     );
-        
+
     const shares = await toShare(bento, tokens[0], amount);
 
     await helloBentoBox.withdrawFromHelloBentoBox(totalDepositsBefore, getBigNumber(500), true)
@@ -213,7 +213,7 @@ describe("Hello BentoBox", function () {
   });
 });
 
-describe("Hello BentoBox - Batch Approval", function() {
+describe("Hello BentoBox - Batch Approval", function () {
   let accounts: Signer[];
 
   let snapshotId;
@@ -266,7 +266,7 @@ describe("Hello BentoBox - Batch Approval", function() {
   afterEach(async function () {
     await restore(snapshotId);
   });
-  
+
   it("should allow HelloBentoBox and deposit in one transaction", async function () {
     const amount = getBigNumber(1000);
     const nonce = await bento.nonces(await accounts[0].getAddress());

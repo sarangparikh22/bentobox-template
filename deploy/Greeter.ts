@@ -12,3 +12,6 @@ export default async ({ getNamedAccounts, deployments }) => {
 
   console.log(`Greeter deployed to ${address}`);
 };
+
+// TODO: Add a HelloBentoBox ts file
+// TODO: add a task folder to interact with HelloBentoBox
