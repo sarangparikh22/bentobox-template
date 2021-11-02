@@ -15,6 +15,8 @@ import {
   getSignedMasterContractApprovalData,
 } from "./harness";
 
+
+// TODO: Typescript broken - most types are inferred
 describe("Hello BentoBox", function () {
   let accounts: Signer[];
 

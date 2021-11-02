@@ -1,5 +1,6 @@
 import { Greeter } from "../typechain";
 
+// TODO: Typescript broken - most types are inferred
 export default async ({ getNamedAccounts, deployments }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
