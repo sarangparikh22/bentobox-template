@@ -1,3 +1,7 @@
+# ides
+.idea/
+.vscode/
+
 # Node
 node_modules/
 
