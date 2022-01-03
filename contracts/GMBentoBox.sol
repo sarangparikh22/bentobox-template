@@ -5,7 +5,7 @@ pragma solidity >=0.8.0;
 import "./interfaces/IBentoBoxMinimal.sol";
 import "./utils/BoringBatchable.sol";
 
-contract HelloBentoBox is BoringBatchable {
+contract GMBentoBox is BoringBatchable {
     struct Deposits {
         address user;
         address token;
@@ -43,7 +43,7 @@ contract HelloBentoBox is BoringBatchable {
         );
     }
 
-    function depositToHelloBentoBox(
+    function depositToGMBentoBox(
         address token,
         uint256 amount,
         bool fromBentoBox
@@ -75,7 +75,7 @@ contract HelloBentoBox is BoringBatchable {
         totalDeposits += 1;
     }
 
-    function withdrawFromHelloBentoBox(
+    function withdrawFromGMBentoBox(
         uint256 depositId,
         uint256 amount,
         bool toBentoBox

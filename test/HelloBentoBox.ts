@@ -15,20 +15,20 @@ import {
   getSignedMasterContractApprovalData,
 } from "./harness";
 
-describe("Hello BentoBox", function () {
+describe("GM BentoBox", function () {
   let accounts: Signer[];
 
   let snapshotId;
 
   let bento;
-  let helloBentoBox;
+  let GMBentoBox;
   let tokens = [];
 
   before(async function () {
     accounts = await ethers.getSigners();
     const ERC20 = await ethers.getContractFactory("ERC20Mock");
     const BentoBoxV1 = await ethers.getContractFactory("BentoBoxV1");
-    const HelloBentoBox = await ethers.getContractFactory("HelloBentoBox");
+    const gMBentoBox = await ethers.getContractFactory("GMBentoBox");
 
     let promises = [];
     for (let i = 0; i < 1; i++) {
@@ -39,9 +39,9 @@ describe("Hello BentoBox", function () {
 
     tokens = await Promise.all(promises);
     bento = await BentoBoxV1.deploy(tokens[0].address);
-    helloBentoBox = await HelloBentoBox.deploy(bento.address);
+    GMBentoBox = await gMBentoBox.deploy(bento.address);
 
-    await bento.whitelistMasterContract(helloBentoBox.address, true);
+    await bento.whitelistMasterContract(GMBentoBox.address, true);
 
     promises = [];
     for (let i = 0; i < tokens.length; i++) {
@@ -61,7 +61,7 @@ describe("Hello BentoBox", function () {
     await Promise.all(promises);
     await bento.setMasterContractApproval(
       accounts[0].address,
-      helloBentoBox.address,
+      GMBentoBox.address,
       true,
       "0",
       "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -71,7 +71,7 @@ describe("Hello BentoBox", function () {
       .connect(accounts[1])
       .setMasterContractApproval(
         accounts[1].address,
-        helloBentoBox.address,
+        GMBentoBox.address,
         true,
         "0",
         "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -93,17 +93,17 @@ describe("Hello BentoBox", function () {
     const balanceOfUserWalletBefore = await tokens[0].balanceOf(
       accounts[0].address
     );
-    const totalDepositsBefore = await helloBentoBox.totalDeposits();
+    const totalDepositsBefore = await GMBentoBox.totalDeposits();
     const shares = await toShare(bento, tokens[0], amount);
-    await helloBentoBox.depositToHelloBentoBox(
+    await GMBentoBox.depositToGMBentoBox(
       tokens[0].address,
       amount,
       false
     );
 
-    const totalDepositsAfter = await helloBentoBox.totalDeposits();
+    const totalDepositsAfter = await GMBentoBox.totalDeposits();
 
-    const depositData = await helloBentoBox.deposits(totalDepositsBefore);
+    const depositData = await GMBentoBox.deposits(totalDepositsBefore);
 
     const balanceOfUserWalletAfter = await tokens[0].balanceOf(
       accounts[0].address
@@ -126,14 +126,14 @@ describe("Hello BentoBox", function () {
       tokens[0],
       accounts[0].address
     );
-    const totalDepositsBefore = await helloBentoBox.totalDeposits();
+    const totalDepositsBefore = await GMBentoBox.totalDeposits();
     const shares = await toShare(bento, tokens[0], amount);
 
-    await helloBentoBox.depositToHelloBentoBox(tokens[0].address, amount, true);
+    await GMBentoBox.depositToGMBentoBox(tokens[0].address, amount, true);
 
-    const totalDepositsAfter = await helloBentoBox.totalDeposits();
+    const totalDepositsAfter = await GMBentoBox.totalDeposits();
 
-    const depositData = await helloBentoBox.deposits(totalDepositsBefore);
+    const depositData = await GMBentoBox.deposits(totalDepositsBefore);
 
     const balanceOfUserBentoAfter = await getBentoBalance(
       bento,
@@ -152,9 +152,9 @@ describe("Hello BentoBox", function () {
 
   it("should allow to withdraw token - wallet", async function () {
     const amount = getBigNumber(1000);
-    const totalDepositsBefore = await helloBentoBox.totalDeposits();
+    const totalDepositsBefore = await GMBentoBox.totalDeposits();
 
-    await helloBentoBox.depositToHelloBentoBox(
+    await GMBentoBox.depositToGMBentoBox(
       tokens[0].address,
       amount,
       false
@@ -166,8 +166,8 @@ describe("Hello BentoBox", function () {
         
     const shares = await toShare(bento, tokens[0], amount);
 
-    await helloBentoBox.withdrawFromHelloBentoBox(totalDepositsBefore, getBigNumber(500), false)
-    const depositData = await helloBentoBox.deposits(totalDepositsBefore);
+    await GMBentoBox.withdrawFromGMBentoBox(totalDepositsBefore, getBigNumber(500), false)
+    const depositData = await GMBentoBox.deposits(totalDepositsBefore);
 
     const balanceOfUserWalletAfter = await tokens[0].balanceOf(
       accounts[0].address
@@ -180,9 +180,9 @@ describe("Hello BentoBox", function () {
 
   it("should allow to withdraw token - bento", async function () {
     const amount = getBigNumber(1000);
-    const totalDepositsBefore = await helloBentoBox.totalDeposits();
+    const totalDepositsBefore = await GMBentoBox.totalDeposits();
 
-    await helloBentoBox.depositToHelloBentoBox(
+    await GMBentoBox.depositToGMBentoBox(
       tokens[0].address,
       amount,
       false
@@ -196,8 +196,8 @@ describe("Hello BentoBox", function () {
         
     const shares = await toShare(bento, tokens[0], amount);
 
-    await helloBentoBox.withdrawFromHelloBentoBox(totalDepositsBefore, getBigNumber(500), true)
-    const depositData = await helloBentoBox.deposits(totalDepositsBefore);
+    await GMBentoBox.withdrawFromGMBentoBox(totalDepositsBefore, getBigNumber(500), true)
+    const depositData = await GMBentoBox.deposits(totalDepositsBefore);
 
     const balanceOfUserBentoAfter = await getBentoBalance(
       bento,
@@ -211,20 +211,20 @@ describe("Hello BentoBox", function () {
   });
 });
 
-describe("Hello BentoBox - Batch Approval", function() {
+describe("GM BentoBox - Batch Approval", function() {
   let accounts: Signer[];
 
   let snapshotId;
 
   let bento;
-  let helloBentoBox;
+  let GMBentoBox;
   let tokens = [];
 
   before(async function () {
     accounts = await ethers.getSigners();
     const ERC20 = await ethers.getContractFactory("ERC20Mock");
     const BentoBoxV1 = await ethers.getContractFactory("BentoBoxV1");
-    const HelloBentoBox = await ethers.getContractFactory("HelloBentoBox");
+    const gMBentoBox = await ethers.getContractFactory("GMBentoBox");
 
     let promises = [];
     for (let i = 0; i < 1; i++) {
@@ -235,9 +235,9 @@ describe("Hello BentoBox - Batch Approval", function() {
 
     tokens = await Promise.all(promises);
     bento = await BentoBoxV1.deploy(tokens[0].address);
-    helloBentoBox = await HelloBentoBox.deploy(bento.address);
+    GMBentoBox = await gMBentoBox.deploy(bento.address);
 
-    await bento.whitelistMasterContract(helloBentoBox.address, true);
+    await bento.whitelistMasterContract(GMBentoBox.address, true);
 
     promises = [];
     for (let i = 0; i < tokens.length; i++) {
@@ -265,26 +265,26 @@ describe("Hello BentoBox - Batch Approval", function() {
     await restore(snapshotId);
   });
   
-  it("should allow HelloBentoBox and deposit in one transaction", async function () {
+  it("should allow GMBentoBox and deposit in one transaction", async function () {
     const amount = getBigNumber(1000);
     const nonce = await bento.nonces(accounts[0].address);
     const { v, r, s } = getSignedMasterContractApprovalData(
       bento,
       accounts[0],
       "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
-      helloBentoBox.address,
+      GMBentoBox.address,
       true,
       nonce
     );
-    let masterContractApprovalData = helloBentoBox.interface.encodeFunctionData(
+    let masterContractApprovalData = GMBentoBox.interface.encodeFunctionData(
       "setBentoBoxApproval",
       [accounts[0].address, true, v, r, s]
     );
-    let depositData = helloBentoBox.interface.encodeFunctionData("depositToHelloBentoBox", [
+    let depositData = GMBentoBox.interface.encodeFunctionData("depositToGMBentoBox", [
       tokens[0].address,
       amount,
       true
     ]);
-    await helloBentoBox.batch([masterContractApprovalData, depositData], true);
+    await GMBentoBox.batch([masterContractApprovalData, depositData], true);
   })
 })
