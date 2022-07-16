@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ethers } from "hardhat";
 import { Signer, BigNumber } from "ethers";
 import { expect } from "chai";
