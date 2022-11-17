@@ -5,7 +5,7 @@ pragma solidity >=0.8.0;
 import "./interfaces/IBentoBoxMinimal.sol";
 import "./utils/BoringBatchable.sol";
 
-contract BJBentoBox is BoringBatchable {
+contract GMBentoBox is BoringBatchable {
     struct Deposits {
         address user;
         address token;
@@ -87,7 +87,7 @@ contract BJBentoBox is BoringBatchable {
             sharesWithdrawn <= deposit.depositedShares,
             "withdraw more than available"
         );
-        
+
         deposit.depositedShares -= sharesWithdrawn;
 
         if (toBentoBox) {
